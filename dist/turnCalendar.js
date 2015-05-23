@@ -133,7 +133,7 @@
  *
  * @author Tri Pham <tri.pham@turn.com>
  */
-angular.module('turn/calendar', ['calendarTemplates']).constant('turnCalendarDefaults', {
+angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
   monthName: [
     'Январь',
     'Февраль',
