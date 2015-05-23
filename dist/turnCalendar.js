@@ -158,6 +158,7 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
     'Сб'
   ],
   startingYear: new Date().getFullYear(),
+  startingMonth: new Date().getMonth() - 1,
   startDayOfWeek: 0
 }).constant('MAX_MONTHS_ALLOWED', 6).constant('MIN_MONTHS_ALLOWED', 1).service('turnCalendarService', [
   'MAX_MONTHS_ALLOWED',
