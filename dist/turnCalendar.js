@@ -203,7 +203,8 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
   'turnCalendarDefaults',
   'turnCalendarService',
   '$document',
-  function ($scope, $attrs, turnCalendarDefaults, turnCalendarService, $document) {
+  'FoundationApi',
+  function ($scope, $attrs, turnCalendarDefaults, turnCalendarService, $document, FoundationApi) {
     var self = this, calendarOptions, MONTH_NAME,
       // These two variables are used to track start date and end date click
       selectedStartDate = null, selectedEndDate = null,
@@ -225,17 +226,50 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
     $scope.isBothDateSelected = true;
     $scope.calendarRanges = [
       {
+        key: 'current_month',
+        name: 'Текущий месяц'
+      },
+      {
         key: 'current_quarter',
         name: 'Текущий квартал'
       }, {
-        key: 'last_quarter',
+        key: 'previous_quarter',
         name: 'Прошедший квартал'
-      }, {
-        key: 'current_month',
-        name: 'Текущий месяц'
       }
     ];
-    $scope.selectedRange = $scope.calendarRanges[0].key;
+
+    $scope.selectedRange = {
+      preset: 'custom',
+      startDate: null,
+      endDate: null
+    }
+
+    $scope.setRange = function(range) {
+      var today = new Date(),
+          current_month = today.getMonth();
+      if (range == 'current_month') {
+        startDate = generateMetaDateObject(moment().startOf('month').toDate(), current_month);
+        endDate   = generateMetaDateObject(today, current_month);
+        $scope.selectedRange.preset = 'current_month';
+      };
+
+      if (range == 'current_quarter') {
+        startDate = generateMetaDateObject(moment().startOf('quarter').toDate(), moment().startOf('quarter').get('month'));
+        endDate   = generateMetaDateObject(today, current_month);
+        $scope.selectedRange.preset = 'current_quarter';
+      };
+
+      if (range == 'previous_quarter') {
+        var startPreviousQuarter = moment().subtract(1, 'quarter').startOf('quarter');
+        var endPreviousQuarter = startPreviousQuarter.clone().endOf('quarter');
+        startDate = generateMetaDateObject( startPreviousQuarter.toDate(), startPreviousQuarter.get('month'));
+        endDate   = generateMetaDateObject( endPreviousQuarter.toDate(), endPreviousQuarter.get('month'));
+        $scope.selectedRange.preset = 'previous_quarter';
+      };
+      resetSelectionTwoClickMode(startDate);
+      setStartDate(startDate);
+      setEndDate(endDate);
+    };
 
     if ($attrs.calendarOptions) {
       calendarOptions = $scope.$parent.$eval($attrs.calendarOptions);
@@ -796,6 +830,9 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
         paletteTheWeek(selectedStartDate, false, false, 'weekly');
         paletteTheWeek(selectedEndDate, false, false, 'weekly');
       }
+      $scope.selectedRange.startDate = selectedStartDate.date;
+      $scope.selectedRange.endDate = selectedEndDate.date;
+      FoundationApi.publish('range_filter', $scope.selectedRange);
     };
     /**
          * Remove all selected dates
@@ -942,9 +979,12 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
         setStartDate(day);
       } else if (isStartDateSelected()) {
         setEndDate(day);
+        $scope.selectedRange.preset = 'custom';
       } else if (isBothSelected()) {
         resetDayClick(day);
+        $scope.selectedRange.preset = 'custom';
       }
+
     };
     $scope.monthArray = generateMonthArray(null, null);
     // Allow to show the calendar or hide it
@@ -1248,6 +1288,7 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       if (selectedEndDate && selectedEndDate.date > day.date) {
         colorSelectedDateRange();
       }
+      $scope.selectedRange.preset = 'custom';
     };
     /**
          * Invoke by ng-change when user input start date string
@@ -1275,6 +1316,7 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       $scope.endDate = day.date.toLocaleDateString();
       discolorSelectedDateRange();
       colorSelectedDateRange();
+      $scope.selectedRange.preset = 'custom';
     };
     /**
          * Invoke by ng-change when user invoke changes to end date string
