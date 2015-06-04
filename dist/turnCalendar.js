@@ -832,7 +832,6 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       }
       $scope.selectedRange.startDate = selectedStartDate.date;
       $scope.selectedRange.endDate = selectedEndDate.date;
-      FoundationApi.publish('range_filter', $scope.selectedRange);
     };
     /**
          * Remove all selected dates
@@ -1035,12 +1034,13 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
         selectedEndDate = selectedStartDate;
         lastSelectedDate = selectedStartDate;
       }
-      $scope.calendarEnabled = false;
+      // $scope.calendarEnabled = false;
       setStartEndDate();
       $scope.currentSelectedStartDate = selectedStartDate;
       $scope.currentSelectedEndDate = selectedEndDate;
       $scope.startDateString = selectedStartDate.date.toLocaleDateString();
       $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      FoundationApi.publish('range_filter', $scope.selectedRange);
       if ($scope.applyCallback) {
         $scope.applyCallback();
       }
