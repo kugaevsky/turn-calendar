@@ -865,8 +865,8 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
         selectedEndDate = day;
       }
       snapDateToMonthlyWeekly();
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
-      $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
+      $scope.endDateString = selectedEndDate.date;
       colorSelectedDateRange();
       colorizePriorButtons();
       $scope.isBothDateSelected = true;
@@ -898,7 +898,7 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
     };
     var setStartDate = function (day) {
       selectedStartDate = day;
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
       day.selectMode = 'daily';
       $scope.isBothDateSelected = false;
     };
@@ -930,8 +930,8 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       }
       swapDate();
       snapDateToMonthlyWeekly();
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
-      $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
+      $scope.endDateString = selectedEndDate.date;
       discolorSelectedDateRange();
       colorSelectedDateRange();
       lastSelectedDate = day;
@@ -1038,8 +1038,8 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       setStartEndDate();
       $scope.currentSelectedStartDate = selectedStartDate;
       $scope.currentSelectedEndDate = selectedEndDate;
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
-      $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
+      $scope.endDateString = selectedEndDate.date;
       FoundationApi.publish('range_filter', $scope.selectedRange);
       if ($scope.applyCallback) {
         $scope.applyCallback();
@@ -1049,8 +1049,8 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       discolorSelectedDateRange();
       selectedStartDate = $scope.currentSelectedStartDate;
       selectedEndDate = $scope.currentSelectedEndDate;
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
-      $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
+      $scope.endDateString = selectedEndDate.date;
       lastSelectedDate = selectedEndDate;
       /**
              * Edge case, if the current selected start date is empty, then it
@@ -1259,10 +1259,10 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       setDefaultRange();
     }
     if (selectedStartDate) {
-      $scope.startDateString = selectedStartDate.date.toLocaleDateString();
+      $scope.startDateString = selectedStartDate.date;
     }
     if (selectedEndDate) {
-      $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+      $scope.endDateString = selectedEndDate.date;
     }
     /**
          * Change start date when ng-change detects the user changing the start
@@ -1340,12 +1340,12 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
         if (attribute === 'startDate') {
           newDate = resetStartDate(newDate);
           selectedStartDate = generateMetaDateObject(newDate, newDate.getMonth());
-          $scope.startDateString = selectedStartDate.date.toLocaleDateString();
+          $scope.startDateString = selectedStartDate.date;
           $scope.currentSelectedStartDate = selectedStartDate;
         } else {
           newDate = resetEndDate(newDate);
           selectedEndDate = generateMetaDateObject(newDate, newDate.getMonth());
-          $scope.endDateString = selectedEndDate.date.toLocaleDateString();
+          $scope.endDateString = selectedEndDate.date;
           $scope.currentSelectedEndDate = selectedEndDate;
         }
         if (selectedStartDate && selectedEndDate) {
