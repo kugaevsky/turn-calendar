@@ -226,46 +226,77 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
     $scope.isBothDateSelected = true;
     $scope.calendarRanges = [
       {
-        key: 'current_month',
-        name: 'Текущий месяц'
-      },
-      {
+        key: 'current_year',
+        name: 'Текущий год'
+      }, {
         key: 'current_quarter',
         name: 'Текущий квартал'
       }, {
+        key: 'current_month',
+        name: 'Текущий месяц'
+      }, {
+        key: 'previous_year',
+        name: 'Прошлый год'
+      }, {
         key: 'previous_quarter',
-        name: 'Прошедший квартал'
+        name: 'Прошлый квартал'
+      }, {
+        key: 'previous_month',
+        name: 'Прошлый месяц'
       }
-    ];
+    ]
 
     $scope.selectedRange = {
-      preset: 'custom',
-      startDate: null,
-      endDate: null
+      preset: $scope.calendarRanges[0]
     }
 
     $scope.setRange = function(range) {
-      var today = new Date(),
-          current_month = today.getMonth();
+      var today = new Date;
+      var current_month = today.getMonth();
+
       if (range == 'current_month') {
-        startDate = generateMetaDateObject(moment().startOf('month').toDate(), current_month);
-        endDate   = generateMetaDateObject(today, current_month);
+        var startDate = generateMetaDateObject(moment().startOf('month').toDate(), current_month);
+        var endDate   = generateMetaDateObject(today, current_month);
         $scope.selectedRange.preset = 'current_month';
       };
 
       if (range == 'current_quarter') {
-        startDate = generateMetaDateObject(moment().startOf('quarter').toDate(), moment().startOf('quarter').get('month'));
-        endDate   = generateMetaDateObject(today, current_month);
+        var startDate = generateMetaDateObject(moment().startOf('quarter').toDate(), moment().startOf('quarter').get('month'));
+        var endDate   = generateMetaDateObject(today, current_month);
         $scope.selectedRange.preset = 'current_quarter';
+      };
+
+      if (range == 'current_year') {
+        var startDate = generateMetaDateObject(moment().startOf('year').toDate(), moment().startOf('year').get('month'));
+        var endDate   = generateMetaDateObject(today, current_month);
+        $scope.selectedRange.preset = 'current_year';
+      };
+
+      if (range == 'previous_month') {
+        var startPreviousMonth = moment().subtract(1, 'month').startOf('month');
+        var endPreviousMonth = startPreviousMonth.clone().endOf('month');
+        var startDate = generateMetaDateObject( startPreviousMonth.toDate(), startPreviousMonth.get('month'));
+        var endDate   = generateMetaDateObject( endPreviousMonth.toDate(), endPreviousMonth.get('month'));
+        $scope.selectedRange.preset = 'previous_month';
       };
 
       if (range == 'previous_quarter') {
         var startPreviousQuarter = moment().subtract(1, 'quarter').startOf('quarter');
         var endPreviousQuarter = startPreviousQuarter.clone().endOf('quarter');
-        startDate = generateMetaDateObject( startPreviousQuarter.toDate(), startPreviousQuarter.get('month'));
-        endDate   = generateMetaDateObject( endPreviousQuarter.toDate(), endPreviousQuarter.get('month'));
+        var startDate = generateMetaDateObject( startPreviousQuarter.toDate(), startPreviousQuarter.get('month'));
+        var endDate   = generateMetaDateObject( endPreviousQuarter.toDate(), endPreviousQuarter.get('month'));
         $scope.selectedRange.preset = 'previous_quarter';
       };
+
+      if (range == 'previous_year') {
+        var startPreviousYear = moment().subtract(1, 'year').startOf('year');
+        var endPreviousYear = startPreviousYear.clone().endOf('year');
+        var startDate = generateMetaDateObject( startPreviousYear.toDate(), startPreviousYear.get('month'));
+        var endDate   = generateMetaDateObject( endPreviousYear.toDate(), endPreviousYear.get('month'));
+        $scope.selectedRange.preset = 'previous_year';
+      };
+
+
       resetSelectionTwoClickMode(startDate);
       setStartDate(startDate);
       setEndDate(endDate);
