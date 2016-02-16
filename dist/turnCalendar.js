@@ -931,6 +931,7 @@ angular.module('turn/calendar', []).constant('turnCalendarDefaults', {
       selectedStartDate = day;
       $scope.startDateString = selectedStartDate.date;
       day.selectMode = 'daily';
+      colorDateInMonth(day.date);
       $scope.isBothDateSelected = false;
     };
     /**
